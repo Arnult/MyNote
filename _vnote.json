@@ -1,0 +1,40 @@
+{
+    "attachment_folder": "_v_attachments",
+    "created_time": "2019-06-24T13:50:20Z",
+    "files": [
+    ],
+    "image_folder": "",
+    "recycle_bin_folder": "_v_recycle_bin",
+    "sub_directories": [
+        {
+            "name": "js"
+        },
+        {
+            "name": "SSL"
+        },
+        {
+            "name": "groovy"
+        },
+        {
+            "name": "Hadoop"
+        },
+        {
+            "name": "pattern"
+        },
+        {
+            "name": "Docker"
+        },
+        {
+            "name": "leetcode"
+        },
+        {
+            "name": "Algorithm"
+        },
+        {
+            "name": "Effective Java"
+        }
+    ],
+    "tags": [
+    ],
+    "version": "1"
+}
