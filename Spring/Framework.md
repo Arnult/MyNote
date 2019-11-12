@@ -144,10 +144,169 @@ public class AppConfig {
     }
 }
 ```
+* Lookup Method Injection
+
+```java
+public abstract class CommandManager {
+    public Object process(Object commandState) {
+        // grab a new instance of the appropriate Command interface
+        Command command = createCommand();
+        // set the state on the (hopefully brand new) Command instance
+        command.setState(commandState);
+        return command.execute();
+    }
+
+    // okay... but where is the implementation of this method?
+    protected abstract Command createCommand();
+}
+```
+通过 Java Configuration，可以生成CommandManager的子类，并重写createCommand()方法
+
+```java
+@Bean
+@Scope("prototype")
+public AsyncCommand asyncCommand() {
+    AsyncCommand command = new AsyncCommand();
+    // inject dependencies here as required
+    return command;
+}
+@Bean
+public CommandManager commandManager() {
+    // return new anonymous implementation of CommandManager with createCommand()
+    // overridden to return a new prototype Command object
+    return new CommandManager() {
+        protected Command createCommand() {
+            return asyncCommand();
+        }
+    }
+}
+```
 
 
+### 1.1.3. 依赖
 
+#### 1.1.3.1. 依赖注入
 
+* 基于构造器的依赖注入： 容器调用带参数的构造器，完成依赖注入
 
+* 基于Setter的依赖注入：容器调用无参构造器实例化bean后，调用setter方法完成依赖注入
 
+Spring team 比较主张构造器注入，这可让对象不可变，和确定依赖非空
 
+setter方法注入的优点是，能让对象在合适的情况下，重新配置或重新被依赖注入
+
+#### 1.1.3.2. Lazy-initalized Beans
+
+Bean 默认是急促实例化且为单例的，通过@Lazy或xml lazy-init="true"可使该bean在请求时才被实例化。
+
+```xml
+<bean id="lazy" class="com.something.ExpensiveToCreateBean" lazy-init="true"/>
+<bean name="not.lazy" class="com.something.AnotherBean"/>
+```
+
+#### 1.1.3.3. Method Injection
+
+当一个单例对象依赖一个非单例对象时，每次获得单例对象里面的非单例不会更新，利用Method Injection 可解决
+
+不再使用以来注入，而是实现BeanFactoryAware接口之后每一次通过getBean的方法获取一个新的实例B，但是这通常不是一个理想的解决方案，因为bean代码耦合到Spring中。
+
+* Lookup Method injection
+```java
+public abstract class CommandManager {
+    public Object process(Object commandState) {
+        // grab a new instance of the appropriate Command interface
+        Command command = createCommand();
+        // set the state on the (hopefully brand new) Command instance
+        command.setState(commandState);
+        return command.execute();
+    }
+
+    // okay... but where is the implementation of this method?
+    protected abstract Command createCommand();
+}
+```
+```java
+public abstract class UserService {
+    public abstract WalletService createWalletService() ;
+    public UserService() {
+        System.out.println("UserService 正在实例化!");
+    }
+    public void login(String userName, String passWord) {
+        createWalletService().run();
+        System.out.println(userName + "正在登陆！");
+    }
+}
+```
+
+```java
+public  class WalletService {
+    public WalletService(){
+        System.out.println("CarService");
+    }
+    public void run() {
+        System.out.println("this = " + this);
+    }
+}
+```
+
+```xml
+<bean id="walletService" class="com.daxin.service.WalletService" singleton="false"/>
+<bean id="userService" class="com.daxin.service.UserService">
+    <lookup-method name="createWalletService" bean="walletService"></lookup-method>
+ </bean>
+```
+测试
+
+```java
+public static void main(String[] args) throws CloneNotSupportedException {
+    ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+    for (int i = 0; i < 5; i++) {
+        UserService userService = (UserService) ctx.getBean("userService");
+        userService.login("daxin", "root");
+    }
+    ctx.close();
+}
+daxin正在登陆！
+CarService
+this = com.daxin.service.WalletService@40e6dfe1
+daxin正在登陆！
+CarService
+this = com.daxin.service.WalletService@1b083826
+daxin正在登陆！
+CarService
+this = com.daxin.service.WalletService@105fece7
+daxin正在登陆！
+CarService
+this = com.daxin.service.WalletService@3ec300f1
+daxin正在登陆
+```
+
+通过@Lookup
+
+```java
+public abstract class CommandManager {
+
+    public Object process(Object commandState) {
+        MyCommand command = createCommand();
+        command.setState(commandState);
+        return command.execute();
+    }
+
+    @Lookup
+    protected abstract MyCommand createCommand();
+}
+```
+
+### 1.1.4. Bean Scopes
+
+* singleton ：默认的Scopes，对在Spring IoC 容器中单例对象的定义
+
+* protoype ： 该定义下的对象，可在容器中存在多个实例
+
+* request ： 定义了单个HTTP请求的生命周期，每一个HTTP请求都有属于它的一个实例
+
+* session ： HTTP会话
+
+* application ： 定义ServletContext的生命周期
+
+* websocket ： 定义websocket的生命周期
