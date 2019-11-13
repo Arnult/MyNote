@@ -15,5 +15,5 @@ class ConcerteClass {
   primitiveOperation2()
 }
 
-AbstractClass <|.. ConcerteClass
+AbstractClass <|-- ConcerteClass
 ```
