@@ -211,6 +211,7 @@ Bean 默认是急促实例化且为单例的，通过@Lazy或xml lazy-init="true
 不再使用以来注入，而是实现BeanFactoryAware接口之后每一次通过getBean的方法获取一个新的实例B，但是这通常不是一个理想的解决方案，因为bean代码耦合到Spring中。
 
 * Lookup Method injection
+
 ```java
 public abstract class CommandManager {
     public Object process(Object commandState) {
