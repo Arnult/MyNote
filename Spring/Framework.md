@@ -66,7 +66,7 @@ public static void main(String[] args) {
     MyService myService = ctx.getBean(MyService.class);
 }
 ```
-
+蚌埠
 #### 1.1.2.3. 使用@Bean 注解
 
 * @Bean 是方法级别的注解，可用在@Configuration注释或@Componet注释过的类中的方法，注释的方法，实例化对象并且返回对像
@@ -88,7 +88,7 @@ public class AppConfig {
 
 ```java
 public class BeanOne {
-
+蚌埠
     public void init() {
         // initialization logic
     }
@@ -311,3 +311,31 @@ public abstract class CommandManager {
 * application ： 定义ServletContext的生命周期
 
 * websocket ： 定义websocket的生命周期
+
+
+## 1.2. Aspect Oriented Programming with Spring (AOP)
+
+AOP 是 OOP的补充，OOP模块化的关键单元是类，AOP模块化的单元是切面。AOP为Spring IoC提供了一个非常有效的中间件解决方案
+
+### 1.2.1. AOP概念
+
+* Aspect：关注涉及多个类的模块化，事物管理就是很好的例子，一个aspect 可通过一个常规的类并通过xml配置（schema-based approach）实现，或通过@AspectJ注解的类实现
+
+* Join point:  程序运行过程中的一点，一个连接点总是代表一个方法的运行
+
+* Advice：Aspect在特定的连接点上采取的操作，许多AOP 框架将Advice建模为拦截器，并且在Join point周围维护了一条拦截器连
+
+* Pointcut：匹配多个连接点（方法）并抽象成一个方法，供Advice调用
+
+* Introduction： 对于一个已有的类引入新的接口，将当前对象转型成另一对象时，就可调用另一对象的方法
+
+Spring AOP 的 advice
+
+* Before advice ：在join point 之前运行
+* After returning advice： 在join point 运行结束后运行
+* After throwing advice：当该join point运行时抛出异常运行
+* After advice ： 不管是正常退出还是抛出异常后都运行
+* Around advice：join point 运行前运行一次，结束也运行一次
+
+
+
