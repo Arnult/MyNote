@@ -35,6 +35,7 @@ var a = 2;
 ```
 
 **严格模式（strict mode）**：**this**的绑定规则完全取决于调用位置，但是只有运行在**非strict mode**下时，默认绑定才能绑定到全局对象。
+
 ```javacript
 function foo(){
   "use strict";
