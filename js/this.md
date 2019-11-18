@@ -25,7 +25,7 @@ function baz(){
 ### 1.2.1. 默认绑定
 
  **非严格模式**：**this**绑定到全局作用域。
- 
+
 ```javascript
 function foo(){
     console.log(this.a);
