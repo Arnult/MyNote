@@ -94,6 +94,7 @@ var obj = {
 foo.call(obj); // 2
 ```
 1. **硬绑定**
+
 ```javascript
 function foo(){
   console.log(this.a)l
